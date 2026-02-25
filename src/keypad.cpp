@@ -6,12 +6,14 @@ Keypad::Keypad(uint8_t analogPin,
                Decode_mode mode,
                uint16_t tolerance,
                uint16_t debounce_ms,
-               bool process_verbose):
+               bool process_verbose,
+               Stream* debug_stream):
                _pin(analogPin),
                _mode(mode),
                _tolerance(tolerance),
                _debounce_ms(debounce_ms),
-               _verbose(process_verbose)
+               _verbose(process_verbose),
+               _debug(debug_stream)
 {
     build_thresholds_table();
 
@@ -93,8 +95,8 @@ void Keypad::update()
 
     if(_verbose)
     {
-        Serial.print("Analog Keypad Raw Value: ");
-        Serial.println(_raw_value);
+        _debug->print("Analog Keypad Raw Value: ");
+        _debug->println(_raw_value);
     }
 
     Key decoded = decode((uint16_t)_raw_value);
@@ -190,37 +192,37 @@ void Keypad::debug_key(Key key_to_print)
     switch(key_to_print)
     {
         case Key::none:
-            Serial.print("NONE");
+            _debug->print("NONE");
             break;
         case Key::select:
-            Serial.print("SELECT");
+            _debug->print("SELECT");
             break;
         case Key::left:
-            Serial.print("LEFT");
+            _debug->print("LEFT");
             break;
         case Key::up:
-            Serial.print("UP");
+            _debug->print("UP");
             break;
         case Key::down:
-            Serial.print("DOWN");
+            _debug->print("DOWN");
             break;
         case Key::right:
-            Serial.print("RIGHT");
+            _debug->print("RIGHT");
             break;
         case Key::multiple:
-            Serial.print("MULTIPLE");
+            _debug->print("MULTIPLE");
             break;
         default:
-            Serial.print("ERROR");
+            _debug->print("ERROR");
             break;
     }
 }
 
 void Keypad::debug_print_key()
 {
-     Serial.print("\tCurrent key pressed: ");
+    _debug->print("\tCurrent key pressed: ");
     debug_key(_stable_key);
-    Serial.print(" (last key: ");
+    _debug->print(" (last key: ");
     debug_key(_last_stable);
-    Serial.println(")");
+    _debug->println(")");
 }

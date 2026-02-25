@@ -19,14 +19,16 @@ public:
     /// @param mode             : Key press decoding methods
     ///                         :   - closest_match : nearest value within tolerance 
     ///                         :   - thresholds    : midpoint thresholds between values
-    /// @param tolerance        :
-    /// @param debounce_ms      :
-    /// @param process_verbose  :
+    /// @param tolerance        : ADC value tolerance range
+    /// @param debounce_ms      : ADC reading software debouncing value (ms)
+    /// @param process_verbose  : Activate process verbose debugging outputs
+    /// @param debug_stream     : Debug serial stream address
     explicit Keypad(uint8_t analogPin, 
                     Decode_mode mode = Decode_mode::closest_match,
                     uint16_t tolerance = 10,
                     uint16_t debounce_ms = 25,
-                    bool process_verbose = false);
+                    bool process_verbose = false,
+                    Stream* debug_stream = &Serial);
     ~Keypad();
 
     // Functions used for the keypad key checks
@@ -57,6 +59,7 @@ private:
     // Class parameter variables
     uint8_t         _pin;
     bool            _verbose;
+    Stream*         _debug;
     Decode_mode     _mode;
     uint16_t        _tolerance;
     uint16_t        _debounce_ms;
