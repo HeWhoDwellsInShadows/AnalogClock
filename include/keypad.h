@@ -44,6 +44,8 @@ public:
     void set_debounce_ms(uint16_t debounce_ms);
     void set_decode_mode(Decode_mode mode);
 
+    void debug_print_key();
+
 private:
 
     struct Key_entry

@@ -15,8 +15,10 @@ void loop()
 {
     kp.update();
 
-  if (kp.changed()) {
-    Serial.println("Key change detected!");
-  }
+    if (kp.changed()) {
+        Serial.println("Key change detected!");
+        kp.debug_print_key();
+        Serial.println();
+    }
 }
 

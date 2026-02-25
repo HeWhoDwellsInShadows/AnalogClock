@@ -115,11 +115,7 @@ void Keypad::update()
 
         if(_verbose && _stable_key != _last_stable)
         {
-            Serial.print("\tCurrent key pressed: ");
-            debug_key(_stable_key);
-            Serial.print(" (last key: ");
-            debug_key(_last_stable);
-            Serial.println(")");
+            debug_print_key();
         }
     }
 }
@@ -218,4 +214,13 @@ void Keypad::debug_key(Key key_to_print)
             Serial.print("ERROR");
             break;
     }
+}
+
+void Keypad::debug_print_key()
+{
+     Serial.print("\tCurrent key pressed: ");
+    debug_key(_stable_key);
+    Serial.print(" (last key: ");
+    debug_key(_last_stable);
+    Serial.println(")");
 }
