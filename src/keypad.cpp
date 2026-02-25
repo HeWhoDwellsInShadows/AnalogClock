@@ -31,6 +31,11 @@ void Keypad::set_verbose(bool process_verbose)
     _verbose = process_verbose;
 }
 
+void Keypad::set_debug_stream(Stream* debug_stream)
+{
+    _debug = debug_stream;
+}
+
 void Keypad::set_tolerance(uint16_t tolerance)
 {
     _tolerance = tolerance;

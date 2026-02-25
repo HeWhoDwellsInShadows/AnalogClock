@@ -42,6 +42,7 @@ public:
 
     // Functions to set class parameters
     void set_verbose(bool process_verbose);
+    void set_debug_stream(Stream* debug_stream);
     void set_tolerance(uint16_t tolerance);
     void set_debounce_ms(uint16_t debounce_ms);
     void set_decode_mode(Decode_mode mode);
