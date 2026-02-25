@@ -1,7 +1,8 @@
 #include <Arduino.h>
 #include "keypad.h"
+#include "SPI.h"
 
-Keypad kp(A0,Keypad::Decode_mode::closest_match, 10, 25);
+Keypad kp(A0,Keypad::Decode_mode::closest_match, 20, 30, false);
 
 void setup() 
 {
@@ -15,7 +16,7 @@ void loop()
     kp.update();
 
   if (kp.changed()) {
-    // react to kp.key()
+    Serial.println("Key change detected!");
   }
 }
 

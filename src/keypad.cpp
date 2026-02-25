@@ -3,10 +3,10 @@
 constexpr Keypad::Key_entry Keypad::key_lookup[];
 
 Keypad::Keypad(uint8_t analogPin, 
-               Decode_mode mode = Decode_mode::closest_match,
+               Decode_mode mode,
                uint16_t tolerance,
                uint16_t debounce_ms,
-               bool process_verbose) :
+               bool process_verbose):
                _pin(analogPin),
                _mode(mode),
                _tolerance(tolerance),
