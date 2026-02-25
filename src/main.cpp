@@ -9,6 +9,8 @@ void setup()
     // Init serial debug output
     Serial.begin(115200);
 
+    pinMode(10,OUTPUT);
+    digitalWrite(10,HIGH);
 }
 
 void loop() 
