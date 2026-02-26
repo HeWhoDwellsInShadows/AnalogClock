@@ -1,8 +1,9 @@
 #include <Arduino.h>
 #include "keypad.h"
+
 #include "SPI.h"
 
-Keypad kp(A0,Keypad::Decode_mode::closest_match, 20, 30, false);
+keypad kp(A0,keypad::decode_mode_ec::closest_match, 20, 30, false);
 
 void setup() 
 {

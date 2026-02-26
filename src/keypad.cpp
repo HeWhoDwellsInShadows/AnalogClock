@@ -1,9 +1,9 @@
 #include "keypad.h"
 
-constexpr Keypad::Key_entry Keypad::key_lookup[];
+constexpr keypad::key_entry_s keypad::key_lookup[];
 
-Keypad::Keypad(uint8_t analogPin, 
-               Decode_mode mode,
+keypad::keypad(uint8_t analogPin, 
+               decode_mode_ec mode,
                uint16_t tolerance,
                uint16_t debounce_ms,
                bool process_verbose,
@@ -21,62 +21,62 @@ Keypad::Keypad(uint8_t analogPin,
     analogReadResolution(KEYPAD_ADC_RESOLUTION);
 }
 
-Keypad::~Keypad()
+keypad::~keypad()
 {
 
 }
 
-void Keypad::set_verbose(bool process_verbose) 
+void keypad::set_verbose(bool process_verbose) 
 {
     _verbose = process_verbose;
 }
 
-void Keypad::set_debug_stream(Stream* debug_stream)
+void keypad::set_debug_stream(Stream* debug_stream)
 {
     _debug = debug_stream;
 }
 
-void Keypad::set_tolerance(uint16_t tolerance)
+void keypad::set_tolerance(uint16_t tolerance)
 {
     _tolerance = tolerance;
 }
 
-void Keypad::set_debounce_ms(uint16_t debounce_ms)
+void keypad::set_debounce_ms(uint16_t debounce_ms)
 {
     _debounce_ms = debounce_ms;
 }
 
-void Keypad::set_decode_mode(Decode_mode mode)
+void keypad::set_decode_mode(decode_mode_ec mode)
 {
     _mode = mode;
 }
 
-int Keypad::raw() const
+int keypad::raw() const
 {
     return _raw_value;
 }
 
-Keypad::Decode_mode Keypad::mode() const
+keypad::decode_mode_ec keypad::mode() const
 {
     return _mode;
 }
 
-Keypad::Key Keypad::key() const
+keypad::key_ec keypad::key() const
 {
     return _stable_key;
 }
 
-Keypad::Key Keypad::last_key() const
+keypad::key_ec keypad::last_key() const
 {
     return _last_stable;
 }
 
-bool Keypad::changed() const
+bool keypad::changed() const
 {
     return _stable_key != _last_stable;
 }
 
-void Keypad::build_thresholds_table()
+void keypad::build_thresholds_table()
 {
     // Calculate the midpoint between each adc center value
     for(size_t index = 0; index < lookup_size - 1; index++)
@@ -88,7 +88,7 @@ void Keypad::build_thresholds_table()
     }
 }
 
-void Keypad::update()
+void keypad::update()
 {
     _raw_value = analogRead(_pin);    
 
@@ -100,11 +100,11 @@ void Keypad::update()
 
     if(_verbose)
     {
-        _debug->print("Analog Keypad Raw Value: ");
+        _debug->print("Analog keypad Raw Value: ");
         _debug->println(_raw_value);
     }
 
-    Key decoded = decode((uint16_t)_raw_value);
+    key_ec decoded = decode((uint16_t)_raw_value);
 
     // Software key debouncing : switch to stable only after same key for debounce time
     uint32_t now = millis();
@@ -127,28 +127,28 @@ void Keypad::update()
     }
 }
 
-Keypad::Key Keypad::decode(uint16_t raw_value) const
+keypad::key_ec keypad::decode(uint16_t raw_value) const
 {
     switch(_mode)
     {
-        case Decode_mode::closest_match:
+        case decode_mode_ec::closest_match:
             return decode_closest_match(raw_value);
-        case Decode_mode::thresholds:
+        case decode_mode_ec::thresholds:
             return decode_thresholds(raw_value);
         default:
-            return Key::error;
+            return key_ec::error;
     }
 }
 
-Keypad::Key Keypad::decode_closest_match(uint16_t raw_value) const
+keypad::key_ec keypad::decode_closest_match(uint16_t raw_value) const
 {
     uint16_t best_value_distance = 0xFFFF;
-    Key best_decoded_key = Key::error;
+    key_ec best_decoded_key = key_ec::error;
 
     // Find closest value in the lookup table
     for(size_t index = 0; index < lookup_size; index++)
     {
-        const Key_entry &entry = key_lookup[index];
+        const key_entry_s &entry = key_lookup[index];
         uint16_t distance = raw_value > entry.adc_value ? (raw_value - entry.adc_value) : 
                                                           (entry.adc_value - raw_value);
 
@@ -171,13 +171,13 @@ Keypad::Key Keypad::decode_closest_match(uint16_t raw_value) const
         uint16_t high_value = key_lookup[index + 1].adc_value;
 
         if(raw_value > low_value && raw_value < high_value)
-            return Key::multiple;
+            return key_ec::multiple;
     }
 
-    return Key::error;
+    return key_ec::error;
 }
 
-Keypad::Key Keypad::decode_thresholds(uint16_t raw_value) const
+keypad::key_ec keypad::decode_thresholds(uint16_t raw_value) const
 {
     // Search through threshold table until raw value is under entry
     for(size_t index = 0; index < lookup_size - 1; index++)
@@ -192,29 +192,29 @@ Keypad::Key Keypad::decode_thresholds(uint16_t raw_value) const
     return key_lookup[lookup_size - 1].key;
 }
 
-void Keypad::debug_key(Key key_to_print)
+void keypad::debug_key(key_ec key_to_print)
 {
     switch(key_to_print)
     {
-        case Key::none:
+        case key_ec::none:
             _debug->print("NONE");
             break;
-        case Key::select:
+        case key_ec::select:
             _debug->print("SELECT");
             break;
-        case Key::left:
+        case key_ec::left:
             _debug->print("LEFT");
             break;
-        case Key::up:
+        case key_ec::up:
             _debug->print("UP");
             break;
-        case Key::down:
+        case key_ec::down:
             _debug->print("DOWN");
             break;
-        case Key::right:
+        case key_ec::right:
             _debug->print("RIGHT");
             break;
-        case Key::multiple:
+        case key_ec::multiple:
             _debug->print("MULTIPLE");
             break;
         default:
@@ -223,7 +223,7 @@ void Keypad::debug_key(Key key_to_print)
     }
 }
 
-void Keypad::debug_print_key()
+void keypad::debug_print_key()
 {
     _debug->print("\tCurrent key pressed: ");
     debug_key(_stable_key);
