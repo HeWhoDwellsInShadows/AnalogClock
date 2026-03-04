@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include "keypad.h"
 
-#include "SPI.h"
+#include "keypad.h"
+#include "secrets.h"
 
 keypad kp(A0,keypad::decode_mode_ec::closest_match, 20, 30, false);
 
