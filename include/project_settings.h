@@ -59,11 +59,10 @@ public:
     bool load();
     bool save();
 
-    const settings_s& get() const {return _settings;};
-    settings_s& edit() {_dirty = true; return _settings;};
+    const settings_s& get() const;
+    settings_s& edit();
 
-    // Convenience setters (optional)
-  void setVerbose(bool enable) { _settings.global_verbose = enable ? 1 : 0; _dirty = true; }
+    void setVerbose(bool process_verbose);
 
 private:
     static constexpr uint16_t _mem_magic = 0xFACE;

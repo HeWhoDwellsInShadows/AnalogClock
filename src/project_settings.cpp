@@ -11,6 +11,24 @@ settings_manager::~settings_manager()
 
 }
 
+const settings_manager::settings_s& settings_manager::get() const
+{
+    return _settings;
+}
+
+settings_manager::settings_s& settings_manager::edit()
+{
+    _dirty = true;
+
+    return _settings;
+}
+
+void settings_manager::setVerbose(bool process_verbose)
+{
+    _settings.global_verbose = process_verbose ? 1 : 0;
+    _dirty = true;
+}
+
 uint16_t settings_manager::crc16_ccitt(const uint8_t* data, size_t length)
 {
     uint16_t crc = 0xFFFF;
