@@ -44,7 +44,7 @@ void setup()
 void loop() 
 {
     kp.update();
-    ts.update();
+    //ts.update();
 
     if (kp.changed()) {
         Serial.println("Key change detected!");
@@ -52,8 +52,11 @@ void loop()
         Serial.println();
     }    
     
-
+/*
     if (ts.ntp_has_just_synched())
+    {
         //LOGI(&Serial, "NTP synchronized\n");
+    }*/
+        
 }
 

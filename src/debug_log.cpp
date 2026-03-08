@@ -90,6 +90,7 @@ void log_printf(Stream* stream, const char* tag, log_level_ec level, const char*
 {
     if(stream)
     {
+        log_print_time(stream);
         log_print_tag(stream, tag);
         log_print_level(stream, level);
 
@@ -108,9 +109,34 @@ void log_println(Stream* stream, const char* tag, log_level_ec level, const char
 {
     if(stream)
     {
+        log_print_time(stream);
+
         log_print_tag(stream, tag);
         log_print_level(stream, level);
 
         stream->println(message);
     }    
+}
+
+const char* log_extract_class(const char* pretty_func)
+{
+    const char* start = pretty_func;
+
+    // Skip return type if present
+    const char* space = strrchr(pretty_func, ' ');
+    if (space && *(space + 1) != '\0')
+        start = space + 1;
+
+    const char* end = strstr(start, "::");
+    if (!end) 
+        return start;
+
+    static char name[24];
+    size_t len = (size_t)(end - start);
+    if (len >= sizeof(name)) len = sizeof(name) - 1;
+
+    memcpy(name, start, len);
+    name[len] = '\0';
+
+    return name;
 }
